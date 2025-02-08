@@ -30,7 +30,7 @@ public class TodoService {
         Optional<TodoModel> optTodo = todoRepository.findById(id);
         if (optTodo.isPresent()) {
             todo.setId(id);
-            todoRepository.save(optTodo.get());
+            todoRepository.save(todo);
         }
         return listAll();
     }
