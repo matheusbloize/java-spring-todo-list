@@ -62,4 +62,26 @@ class TodoListApplicationTests {
 		assertNotNull(todos);
 		assertFalse(!todos.isEmpty());
 	}
+
+	@Test
+	void testDeleteTodo() {
+		var todo = new TodoModel("test todo", "test todo description", false, 1);
+		webTestClient
+				.post()
+				.uri("/todos")
+				.bodyValue(todo)
+				.exchange();
+		List<TodoModel> response = getTodos();
+		if (response != null && !response.isEmpty()) {
+			int responseLength = response.size();
+			webTestClient
+					.delete()
+					.uri("/todos/" + response.get(0).getId())
+					.exchange()
+					.expectStatus().isOk()
+					.expectBody()
+					.jsonPath("$").isArray()
+					.jsonPath("$.length()").isEqualTo(responseLength - 1);
+		}
+	}
 }
