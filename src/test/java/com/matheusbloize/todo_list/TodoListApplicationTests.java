@@ -18,9 +18,23 @@ class TodoListApplicationTests {
 	@Autowired
 	private WebTestClient webTestClient;
 
+	private TodoModel createTodo() {
+		return new TodoModel("test todo", "test todo description", false, 1);
+	}
+
+	private List<TodoModel> getTodos() {
+		return webTestClient.get()
+				.uri("/todos")
+				.exchange()
+				.expectStatus().isOk()
+				.expectBodyList(TodoModel.class)
+				.returnResult()
+				.getResponseBody();
+	}
+
 	@Test
 	void testCreateTodoSuccess() {
-		var todo = new TodoModel("test todo", "test todo description", false, 1);
+		var todo = createTodo();
 		webTestClient
 				.post()
 				.uri("/todos")
@@ -46,16 +60,6 @@ class TodoListApplicationTests {
 				.expectStatus().isBadRequest();
 	}
 
-	private List<TodoModel> getTodos() {
-		return webTestClient.get()
-				.uri("/todos")
-				.exchange()
-				.expectStatus().isOk()
-				.expectBodyList(TodoModel.class)
-				.returnResult()
-				.getResponseBody();
-	}
-
 	@Test
 	void testGetTodos() {
 		List<TodoModel> todos = getTodos();
@@ -65,7 +69,7 @@ class TodoListApplicationTests {
 
 	@Test
 	void testDeleteTodo() {
-		var todo = new TodoModel("test todo", "test todo description", false, 1);
+		var todo = createTodo();
 		webTestClient
 				.post()
 				.uri("/todos")
