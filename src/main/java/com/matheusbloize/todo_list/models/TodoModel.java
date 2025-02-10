@@ -22,6 +22,16 @@ public class TodoModel implements Serializable {
     private boolean done;
     private int priority;
 
+    public TodoModel() {
+    }
+
+    public TodoModel(String name, String description, boolean done, int priority) {
+        this.name = name;
+        this.description = description;
+        this.done = done;
+        this.priority = priority;
+    }
+
     public UUID getId() {
         return id;
     }
