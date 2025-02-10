@@ -1,5 +1,10 @@
 package com.matheusbloize.todo_list;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,4 +46,20 @@ class TodoListApplicationTests {
 				.expectStatus().isBadRequest();
 	}
 
+	private List<TodoModel> getTodos() {
+		return webTestClient.get()
+				.uri("/todos")
+				.exchange()
+				.expectStatus().isOk()
+				.expectBodyList(TodoModel.class)
+				.returnResult()
+				.getResponseBody();
+	}
+
+	@Test
+	void testGetTodos() {
+		List<TodoModel> todos = getTodos();
+		assertNotNull(todos);
+		assertFalse(!todos.isEmpty());
+	}
 }
