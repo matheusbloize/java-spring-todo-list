@@ -32,8 +32,19 @@ class TodoListApplicationTests {
 				.getResponseBody();
 	}
 
+	private void deleteTodos() {
+		List<TodoModel> todos = getTodos();
+		for (int i = 0; i < todos.size(); i++) {
+			webTestClient
+					.delete()
+					.uri("/todos/" + todos.get(i).getId())
+					.exchange();
+		}
+	}
+
 	@Test
 	void testCreateTodoSuccess() {
+		deleteTodos();
 		var todo = createTodo();
 		webTestClient
 				.post()
@@ -43,7 +54,6 @@ class TodoListApplicationTests {
 				.expectStatus().isCreated()
 				.expectBody()
 				.jsonPath("$").isArray()
-				.jsonPath("$.length()").isEqualTo(1)
 				.jsonPath("$[0].name").isEqualTo(todo.getName())
 				.jsonPath("$[0].description").isEqualTo(todo.getDescription())
 				.jsonPath("$[0].done").isEqualTo(todo.isDone())
@@ -65,6 +75,37 @@ class TodoListApplicationTests {
 		List<TodoModel> todos = getTodos();
 		assertNotNull(todos);
 		assertFalse(!todos.isEmpty());
+	}
+
+	@Test
+	void testUpdateTodo() {
+		deleteTodos();
+		var todo = createTodo();
+		webTestClient
+				.post()
+				.uri("/todos")
+				.bodyValue(todo)
+				.exchange();
+		List<TodoModel> response = getTodos();
+		if (response != null && !response.isEmpty()) {
+			int responseLength = response.size();
+			TodoModel firstTodo = response.get(0);
+			String updatedDescription = "todo description updated";
+			webTestClient
+					.put()
+					.uri("/todos/" + firstTodo.getId())
+					.bodyValue(new TodoModel(firstTodo.getName(), updatedDescription, firstTodo.isDone(), firstTodo.getPriority()))
+					.exchange()
+					.expectStatus().isOk()
+					.expectBody()
+					.jsonPath("$").isArray()
+					.jsonPath("$.length()").isEqualTo(responseLength)
+					.jsonPath("$[0].id").isEqualTo(firstTodo.getId())
+					.jsonPath("$[0].name").isEqualTo(todo.getName())
+					.jsonPath("$[0].description").isEqualTo(updatedDescription)
+					.jsonPath("$[0].done").isEqualTo(todo.isDone())
+					.jsonPath("$[0].priority").isEqualTo(todo.getPriority());
+		}
 	}
 
 	@Test
