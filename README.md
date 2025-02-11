@@ -14,7 +14,7 @@ CRUD REST API to practice Spring Boot fundamentals and important dependencies su
 ```
 https://github.com/matheusbloize/java-spring-todo-list.git
 ```
-- Create your PostgreSQL table
+- Create your PostgreSQL database
 - Create .env and add environment variables ([example](https://github.com/matheusbloize/java-spring-todo-list/blob/main/.env.example))
 - Build project:
 ```
