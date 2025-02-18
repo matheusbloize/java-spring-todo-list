@@ -2,7 +2,7 @@
 
 CRUD REST API to practice Spring Boot fundamentals and important dependencies such as Spring MVC and Spring Data JPA.
 
-## Tecnologies
+## Technologies
 - [JDK 17.0.9](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 - [Spring Boot](https://spring.io/projects/spring-boot)
 - [Spring MVC](https://docs.spring.io/spring-framework/reference/web/webmvc.html)
